@@ -1,0 +1,232 @@
+<app-header></app-header>
+<!-- Main content -->
+<section class="content">
+  <div class="m-2">
+    <div class="row">
+      <div class="col-12 col-sm-12">
+        <div class="card card-light card-tabs">
+          <div class="card-header p-0 pt-1">
+            <ul class="nav nav-tabs">
+              <li class="nav-item">
+                <a class="nav-link active" data-toggle="pill" href="#asistencia-crud">Asistencia</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-toggle="pill" href="#custom-tabs-one-empleado">Empleado</a>
+              </li>
+            </ul>
+          </div>
+          <div class="card-body">
+            <div class="tab-content">
+              <div class="tab-pane fade show active" id="asistencia-crud">
+                <!-- asistencia crud -->
+                <div class="tab-pane">
+                  <app-listado></app-listado>
+                </div>
+
+                <!-- asistencia crud -->
+              </div>
+              <div class="tab-pane fade" id="custom-tabs-one-empleado">
+                <div class="row">
+                  <div class="col-12 col-sm-12">
+                    <div class="tab-content">
+                      <div class="table-responsive">
+                        <div class="row">
+                          <div style="width:255px ;margin-bottom: 5px;">
+                            <label for="">Filtrar por nombre:</label><br>
+                            <input type="text" class="form-control" style="width: 250px" placeholder="Buscar.."
+                              [(ngModel)]="filterpost" name="filterpost" />
+                          </div>
+                          <div style="width: 60px;">
+                            <label for="">Nuevo:</label><br>
+                            <i class="bi bi-plus-square-fill" style="font-size: 37px;cursor: pointer;color: green;" (click)="abrirNuevoEmpleado(crearEmpleado)"></i>
+                          </div>
+                        </div>
+                        <table *ngIf="empleados!=null" class="table">
+                          <thead>
+                            <tr>
+                              <th scope="col" style="width: 60px;">ID</th>
+                              <th scope="col">NOMBRE</th>
+                              <th scope="col">NUMERO DOCUMENTO</th>
+                              <th scope="col">TIPO DOCUMENTO</th>
+                              <th scope="col">LOCAL</th>
+                              <th scope="col">REPORTE</th>
+                              <th scope="col">EDIT</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr
+                              *ngFor="let fila of empleados | filter:filterpost:['nombre'] |paginate: { id:'pempleado',itemsPerPage: 10, currentPage: empleado_p}">
+                              <td>{{fila.id}}</td>
+                              <td>{{fila.nombre}}</td>
+                              <td>{{fila.num_doc}}</td>
+                              <td>{{fila.tipo_doc}}</td>
+                              <td>{{fila.descripcion}}</td>
+                              <td><i style="cursor: pointer;" class="bi bi-table"
+                                  (click)="openReport(reporte,fila.id,fila.nombre)"></i></td>
+                                  <td><a (click)="EditarCampos(crearEmpleado,fila.id,fila.local,fila.codigo,fila.activo,fila.nombre,fila.num_doc,fila.tipo_doc)" style="cursor: pointer;"><i class="bi bi-pencil-square"></i></a></td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div style="text-align: center;"><pagination-controls id="pempleado" (pageChange)="empleado_p = $event"></pagination-controls></div>
+                      <!-- <pagination-controls (pageChange)="p = $event"></pagination-controls> -->
+                      <!-- /.card -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /.card -->
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<ng-template #reporte let-modal style="width: 1000px;">
+  <div class="modal-header" style="height: 55px;">
+    <h3 class="modal-title"><b>Reporte Empleado ({{reportEmpleadoNombre}})</b></h3>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <div class="row mb-2">
+      <div style="width: 230px;">
+        <label for="">Desde:</label>
+        <div class="input-group date" data-provide="datepicker">
+          <input type="date" class="form-control" [(ngModel)]="fecha1">
+          <div class="input-group-addon">
+            <span class="glyphicon glyphicon-th"></span>
+          </div>
+        </div>
+      </div>
+      <div style="width: 230px;">
+        <label for="">Hasta:</label>
+        <div class="input-group date" data-provide="datepicker">
+          <input type="date" class="form-control" [(ngModel)]="fecha2">
+          <div class="input-group-addon">
+            <span class="glyphicon glyphicon-th"></span>
+          </div>
+        </div>
+      </div>
+      <div style="width: 60px;">
+        <label for="">Buscar:</label><br>
+        <button class="btn btn-success" style="width: 50px;" (click)="busquedaAsistenciaEmpleado()"><i
+            class="bi bi-search"></i></button>
+      </div>
+      <div style="width: 100px;">
+        <label for="">&nbsp;&nbsp;</label><br>
+        <button class="btn btn-success" style="width: 100px;" (click)="reporteEmpleado()">Reporte</button>
+      </div>
+
+    </div>
+    <table *ngIf="asistenciaEmpleado!=null" id="asistencia-excel" class="table">
+      <thead>
+        <tr>
+          <th scope="col">FECHA</th>
+          <th scope="col">NOMBRE</th>
+          <th scope="col">NUMERO DOCUMENTO</th>
+          <th scope="col">IMAGEN</th>
+          <th scope="col">TIPO</th>
+          <th scope="col">IDENTIFICADOR</th>
+          <th scope="col">IP</th>
+        </tr>
+      </thead>
+      <tbody style="text-align: left;">
+        <tr *ngFor="let fila of asistenciaEmpleado| sort: 'id' | paginate: { itemsPerPage: 10, currentPage: ae }">
+          <td>{{fila.fecha|date:'d/M/yy, h:mm a'}}</td>
+          <td>{{fila.nombre}}</td>
+          <td>{{fila.num_doc}}</td>
+          <td *ngIf="fila.imagen"><a style="cursor: pointer;" (click)="mostrarImagen(fila.imagen)"><img width="50"
+                [src]="fila.imagen |imagen"></a></td>
+          <td *ngIf="!fila.imagen"><a><img width="50" src="./../../../../assets/dist/img/userDefault.jpg"></a></td>
+          <td>{{fila.tipo}}</td>
+          <td *ngIf="fila.identificador=='SALIDA'"><span class="badge badge-pill badge-danger ml-3"
+              style="cursor: pointer;" (click)="updateAsitencia(fila.id,'ENTRADA')">{{fila.identificador}}</span></td>
+          <td *ngIf="fila.identificador=='ENTRADA'"><span class="badge badge-pill badge-success ml-3"
+              style="cursor: pointer;" (click)="updateAsitencia(fila.id,'SALIDA')">{{fila.identificador}}</span></td>
+          <td>{{fila.ip_public}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <pagination-controls (pageChange)="ae = $event"></pagination-controls>
+  </div>
+  <div class="modal-footer">
+
+  </div>
+</ng-template>
+
+<ng-template #crearEmpleado let-modal style="width: 1000px;">
+  <div class="modal-header" style="height: 55px;">
+    <h3 *ngIf="!empleado.id" class="modal-title"><b>Nuevo Empleado</b></h3>
+    <h3 *ngIf="empleado.id" class="modal-title"><b>Editar Empleado</b></h3>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <form (ngSubmit)="enviar(updateForm)" #updateForm="ngForm" autocomplete="off">
+      <div *ngIf="empleado.id" class="row m-2">
+        <label class="col-3 form-label">ID: </label>
+        <div class="col-9">
+          <input type="text" [(ngModel)]="empleado.id" name="id" class="form-control" autocomplete="off" readonly required>
+        </div>
+      </div>
+      <div class="row m-2">
+        <label class="col-3 form-label">Nombre: </label>
+        <div class="col-9">
+          <input type="text" [(ngModel)]="empleado.nombre" id="nombre" name="nombre" class="form-control" autocomplete="off" required>
+          <span style="color: red;" *ngIf="updateForm.submitted&&updateForm.controls['nombre'].errors">Este Campo es obligatorio (*)</span>
+        </div>
+      </div>
+      <div class="row m-2">
+        <label class="col-3 form-label">Tipo Documento: </label>
+        <div class="col-9">
+          <select type="text" [(ngModel)]="empleado.tipo_doc" name="tipo_doc" class="custom-select" required>
+            <option value="" selected>Elije un Documento</option>
+            <option value="01">DNI</option>
+            <option value="06">RUC</option>
+            <option value="04">CARNET DE EXTRANJERIA</option>
+          </select>
+          <span style="color: red;" *ngIf="updateForm.submitted&&updateForm.controls['tipo_doc'].errors">Este Campo es obligatorio (*)</span>
+        </div>
+      </div>
+      <div class="row m-2">
+        <label class="col-3 form-label">Numero Documento: </label>
+        <div class="col-9">
+          <input type="text" [(ngModel)]="empleado.num_doc" name="num_doc" class="form-control" autocomplete="off" required>
+          <span style="color: red;" *ngIf="updateForm.submitted&&updateForm.controls['num_doc'].errors">Este Campo es obligatorio (*)</span>
+        </div>
+      </div>
+      <div class="row m-2">
+        <label class="col-3 form-label">Local: </label>
+        <div class="col-9">
+          <select [(ngModel)]="empleado.local" name="local" class="custom-select" required>
+            <option value="">Elije un local</option>
+            <option [value]="item.id" *ngFor="let item of local">{{item.descripcion}}</option>
+          </select>
+          <span style="color: red;" *ngIf="updateForm.submitted&&updateForm.controls['local'].errors">Este Campo es obligatorio (*)</span>
+        </div>
+      </div>
+      <div class="row m-2">
+        <label class="col-3 form-label">Clave: </label>
+        <div class="col-9">
+          <input type="text" [(ngModel)]="empleado.codigo" name="codigo"  class="form-control" required>
+          <span style="color: red;" *ngIf="updateForm.submitted&&updateForm.controls['codigo'].errors">Este Campo es obligatorio (*)</span>
+        </div>
+      </div>
+      <div class="row m-2">
+        <label class="col-3 form-label">Activo: </label>
+        <div class="col-9">
+          <div class="form-check">
+            <input type="checkbox" [(ngModel)]="empleado.activo" name="activo" class="form-check-input" id="check-empleado">
+            <label class="form-check-label" for="check-empleado">
+              Activo
+            </label>
+          </div>
+        </div>
+      </div>
+      <button style="float: right;" type="submit" class="btn btn-success">Aceptar</button>
+    </form>
+  </div>
+  <div class="modal-footer">
+
+  </div>
+</ng-template>

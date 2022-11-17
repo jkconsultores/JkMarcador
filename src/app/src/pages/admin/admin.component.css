@@ -1,0 +1,7 @@
+
+.dropdown-item{
+  cursor: pointer;
+}
+.myCustomModalClass .modal-dialog {
+  max-width: 1165px;
+}

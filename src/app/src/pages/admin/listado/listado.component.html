@@ -1,0 +1,122 @@
+<div class="row">
+  <div class="col-12 col-sm-12">
+    <div class="row mb-1">
+      <div style="width: 260px;">
+        <label for="">Filtrar por nombre:</label>
+        <input type="text" class="form-control" style="width: 250px" placeholder="Buscar.."
+          [(ngModel)]="filterAsistencia" name="filterpost" />
+      </div>
+      <div style="width: 230px;">
+        <label for="">Desde:</label>
+        <div class="input-group date" data-provide="datepicker">
+          <input type="date" class="form-control" [(ngModel)]="fecha1">
+          <div class="input-group-addon">
+            <span class="glyphicon glyphicon-th"></span>
+          </div>
+        </div>
+      </div>
+      <div style="width: 230px;">
+        <label for="">Hasta:</label>
+        <div class="input-group date" data-provide="datepicker">
+          <input type="date" class="form-control" [(ngModel)]="fecha2">
+          <div class="input-group-addon">
+            <span class="glyphicon glyphicon-th"></span>
+          </div>
+        </div>
+      </div>
+      <div style="width: 60px;">
+        <label for="">Buscar:</label><br>
+        <button class="btn btn-success" style="width: 50px;" (click)="busquedaAsistenciaRango()"><i
+            class="bi bi-search"></i></button>
+      </div>
+      <div style="width: 60px;">
+        <label for="">Nuevo:</label><br>
+        <i class="bi bi-plus-square-fill" style="font-size: 37px;cursor: pointer;color: green;"
+          (click)="abrirModalAsistencia(crearAsistencia)"></i>
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table *ngIf="asistencias!=null" id="asistencia-excel" class="table">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">FECHA</th>
+            <th scope="col">NOMBRE</th>
+            <th scope="col">IMAGEN</th>
+            <th scope="col">TIPO</th>
+            <th scope="col">IDENTIFICADOR</th>
+            <th scope="col">IP</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let fila of asistencias| filter:filterAsistencia:['nombre']| sort: 'fecha'| paginate: {id:'pasistencia', itemsPerPage: 10, currentPage: ae }">
+            <td>{{fila.id}}</td>
+            <!-- |date:'short' -->
+            <td>{{fila.fecha| date: 'd/M/yy, h:mm a'}}</td>
+            <td>{{fila.nombre}}</td>
+            <td *ngIf="fila.imagen"><a style="cursor: pointer;" (click)="mostrarImagen(fila.imagen)"><img width="50"
+                  [src]="fila.imagen |imagen"></a></td>
+            <td *ngIf="!fila.imagen"><a><img width="50" src="./../../../../assets/dist/img/userDefault.jpg"></a></td>
+            <td>{{fila.tipo}}</td>
+            <td *ngIf="fila.identificador=='SALIDA'"><span class="badge badge-pill badge-danger"
+                style="cursor: pointer;" (click)="updateAsitencia(fila.id,'ENTRADA')">{{fila.identificador}}</span></td>
+            <td *ngIf="fila.identificador=='ENTRADA'"><span class="badge badge-pill badge-success"
+                style="cursor: pointer;" (click)="updateAsitencia(fila.id,'SALIDA')">{{fila.identificador}}</span></td>
+            <td>{{fila.ip_public}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="text-align: center;"><pagination-controls id="pasistencia" (pageChange)="ae = $event"></pagination-controls></div>
+  </div>
+</div>
+<ng-template #crearAsistencia let-modal style="width: 1000px;">
+  <div class="modal-header">
+    <h3 class="modal-title"><b>Nueva Asistencia</b></h3>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <form (ngSubmit)="enviar(AsistenciaForm)" #AsistenciaForm="ngForm" autocomplete="off">
+      <div class="row m-2">
+
+        <label class="col-3 form-label">Empleado: </label>
+
+        <div class="col-9">
+          <select name="cod_empleado" class="form-select" [(ngModel)]="asistencia.cod_empleado" required>
+            <option value="0">Seleccione un usuario</option>
+        <option *ngFor="let item of empleados" [value]="item.codigo">{{item.nombre}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="row m-2">
+        <label class="col-3 form-label">Fecha: </label>
+        <div class="col-9">
+          <input type="datetime-local" [(ngModel)]="asistencia.fecha" id="fecha" name="fecha" class="form-control"
+            autocomplete="off" required>
+          <span style="color: red;" *ngIf="AsistenciaForm.submitted&&AsistenciaForm.controls['fecha'].errors">Este Campo
+            es
+            obligatorio (*)</span>
+        </div>
+      </div>
+      <div class="row m-2">
+        <label class="col-3 form-label">Identificador: </label>
+        <div class="col-9">
+          <select [(ngModel)]="asistencia.identificador" name="identificador" class="custom-select" required>
+            <option value="">Seleccione un identificador</option>
+            <option value="ENTRADA">ENTRADA</option>
+            <option value="SALIDA">SALIDA</option>
+          </select>
+          <span style="color: red;"
+            *ngIf="AsistenciaForm.submitted&&AsistenciaForm.controls['identificador'].errors">Este Campo es
+            obligatorio (*)</span>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-success">Aceptar</button>
+    </form>
+
+  </div>
+  <div class="modal-footer">
+
+  </div>
+</ng-template>

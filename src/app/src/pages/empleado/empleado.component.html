@@ -1,0 +1,121 @@
+<nav class="navbar navbar-expand-lg  bg-secondary navbar-light">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+    <a href="/#/admin" class="nav-link" style="color: white;font-size: 18px;" *ngIf="token">Dashboard</a>
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <button (click)="salir()" *ngIf="token" class="btn btn-outline-light mr-2">Salir</button>
+      <button (click)="login()" *ngIf="!token" class="btn btn-outline-light mr-2">Login</button>
+      <a class="mr-3" data-widget="fullscreen" role="button">
+        <i class="fas fa-expand-arrows-alt" style="color: white;"></i>
+      </a>
+    </form>
+  </div>
+</nav>
+
+
+<div class="row container-fluid mt-1">
+  <div class="col-sm-8 col-md-8	col-lg-8	col-xl-8">
+    <div class="card card-light">
+    <!-- <div class="card-header ">
+      <div class="text-center">
+        <h1>{{now|date:'hh:mm:ss a'}}</h1>
+      </div>
+    </div> -->
+      <div class="card-body text-center" style="height: 470px;">
+        <h3>{{now|date:'hh:mm:ss a'}}</h3>
+        <div style="margin: auto;margin-top: 20px;">
+          <webcam [height]="350" [trigger]="triggerObservable" (imageCapture)="handleImage($event)">
+          </webcam>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-4	col-md-4	col-lg-4 col-xl-4">
+    <div class="card card-light" style="height: 470px;">
+<!--       <div class="card-header text-center">
+        <h1>Registrar marcación</h1>
+      </div> -->
+      <div class="card-body text-center">
+    <!--     <h3>Registrar marcación</h3> -->
+
+        <input class="mb-1 form-control" [ngModel]="codigo" id="codigo" name="codigo" type="text" ng-minlength="4"
+          ng-maxlength="4" readonly style="text-align: center;"><br>
+        <div role="alert" class="error-message" *ngIf="validacionInput">
+          <p>Ingrese un codigo!</p>
+        </div>
+        <table style=" margin: auto;">
+          <tr>
+            <td><button class="btn btn-outline-secondary" style="height: 70px;width: 70px;font-size: 20pt;"
+                (click)="asignar('7')">7</button></td>
+            <td> <button class="btn btn-outline-secondary" style="height: 70px;width: 70px;font-size: 20pt;"
+                (click)="asignar('8')">8</button></td>
+            <td> <button class="btn btn-outline-secondary" style="height: 70px;width: 70px;font-size: 20pt;"
+                (click)="asignar('9')">9</button></td>
+          </tr>
+          <tr>
+            <td><button class="btn btn-outline-secondary" style="height: 70px;width: 70px;font-size: 20pt;"
+                (click)="asignar('4')">4</button></td>
+            <td> <button class="btn btn-outline-secondary" style="height: 70px;width: 70px;font-size: 20pt;"
+                (click)="asignar('5')">5</button></td>
+            <td> <button class="btn btn-outline-secondary" style="height: 70px;width: 70px;font-size: 20pt;"
+                (click)="asignar('6')">6</button></td>
+          </tr>
+          <tr>
+            <td> <button class="btn btn-outline-secondary" style="height: 70px;width: 70px;font-size: 20pt;"
+                (click)="asignar('1')">1</button></td>
+            <td> <button class="btn btn-outline-secondary" style="height: 70px;width: 70px;font-size: 20pt;"
+                (click)="asignar('2')">2</button></td>
+            <td> <button class="btn btn-outline-secondary" style="height: 70px;width: 70px;font-size: 20pt;"
+                (click)="asignar('3')">3</button></td>
+          </tr>
+          <tr>
+            <td> <button class="btn btn-outline-secondary" style="height: 70px;width: 70px;font-size: 20pt;"
+                (click)="asignar('0')">0</button></td>
+            <td colspan="2"> <button class="btn btn-outline-secondary"
+                style="height: 70px;width: 140px;font-size: 20pt;" (click)="clear()">Clear</button></td>
+          </tr>
+        </table>
+        <div class="text-center">
+          <button class="btn btn-success mt-2 mr-2" (click)="open(content,'ENTRADA')" style="width: 90px;height: 55px;">
+            Entrada</button>
+          <button class="btn btn-danger mt-2" (click)="open(content,'SALIDA')" style="width: 90px;height: 55px;">
+            Salida</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Perfil Empleado</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="limpiarModal();modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="snapshot col-7" *ngIf="webcamImage">
+        <img style="height: 200px;" [src]="webcamImage.imageAsDataUrl" />
+      </div>
+      <div class="col-5">
+        <ul class="list-group">
+          <li class="list-group-item">{{nombreEmpleado|uppercase}}</li>
+          <li class="list-group-item">{{num_doc}}</li>
+          <li class="list-group-item">{{hoy|date:'mediumTime'}}</li>
+          <li class="list-group-item">{{registro|uppercase}}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-danger" (click)="limpiarModal();modal.dismiss('Cross click')">Cancelar</button>
+    <button type="button" class="btn btn-outline-success"
+      (click)="marcarEntrada();modal.close('Save click')">Aceptar</button>
+  </div>
+</ng-template>

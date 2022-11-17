@@ -1,0 +1,9 @@
+.link-button{
+  color: white;
+  font-style: none;
+  font-size: 19px;
+  list-style-type: none;
+  text-decoration: none;
+  cursor: pointer;
+  margin-right: 2px;
+}

@@ -1,0 +1,202 @@
+<app-header></app-header>
+<section class="card m-4">
+  <div class="m-2">
+    <mat-tab-group>
+      <div class="card-body">
+      </div>
+      <mat-tab label="Reporte Consolidado Diario">
+        <div class="card-body">
+          <div class="hed">
+            <div style="width: 250px;">
+              <label for="">Filtrar por nombre:</label>
+              <input type="text" class="form-control" style="width: 250px" placeholder="Buscar.."
+                [(ngModel)]="filtroNombreConsolidado" name="filtroNombreConsolidado" />
+            </div>
+            <div style="width: 150px;">
+              <label for="">Filtrar por año:</label>
+              <select class="form-select" [(ngModel)]="yearActual" style="width: 150px;"
+                (change)="reporteMesSelect()">
+                <option value="2022">2022</option>
+                <option value="2023">2023</option>
+                <option value="2024">2024</option>
+              </select>
+            </div>
+            <div style="width: 150px;">
+              <label for="">Filtrar por mes:</label>
+              <select class="form-select" [(ngModel)]="mesActual" style="width: 150px;" (change)="reporteMesSelect()">
+                <option [value]="i" *ngFor="let item of fecha; let i = index">{{item}}</option>
+              </select>
+            </div>
+            <div style="width: 220px;">
+              <label for="">Reporte:</label><br>
+                <button class="btn btn-success" type="button" (click)="reporteMes()">
+                  Exportar
+                </button>
+           <!--      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" (click)="reporteMes()">Reporte Por dia</a>
+                  <a class="dropdown-item" (click)="exportToExcel()">Consolidado Diario</a>
+                </div> -->
+            </div>
+          </div>
+        </div>
+        <div class="table-responsive table-bordered table-hover">
+          <table *ngIf="reporteMesActual!=null" id="tblreporte" class="table mb-2">
+            <thead>
+              <tr style="background-color: rgb(216, 216, 216);">
+                <th scope="col">Empleado</th>
+                <th scope="col">Codigo</th>
+                <th scope="col">1</th>
+                <th scope="col">2</th>
+                <th scope="col">3</th>
+                <th scope="col">4</th>
+                <th scope="col">5</th>
+                <th scope="col">6</th>
+                <th scope="col">7</th>
+                <th scope="col">8</th>
+                <th scope="col">9</th>
+                <th scope="col">10</th>
+                <th scope="col">11</th>
+                <th scope="col">12</th>
+                <th scope="col">13</th>
+                <th scope="col">14</th>
+                <th scope="col">15</th>
+                <th scope="col">16</th>
+                <th scope="col">17</th>
+                <th scope="col">18</th>
+                <th scope="col">19</th>
+                <th scope="col">20</th>
+                <th scope="col">21</th>
+                <th scope="col">22</th>
+                <th scope="col">23</th>
+                <th scope="col">24</th>
+                <th scope="col">25</th>
+                <th scope="col">26</th>
+                <th scope="col">27</th>
+                <th scope="col">28</th>
+                <th scope="col">29</th>
+                <th scope="col">30</th>
+                <th scope="col">31</th>
+                <th scope="col">Total</th>
+                <th scope="col">Semana 1</th>
+                <th scope="col">Semana 2</th>
+                <th scope="col">Semana 3</th>
+                <th scope="col">Semana 4</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="let fila of reporteMesActual| filter:filtroNombreConsolidado:['Nombre']| sort: 'Nombre' |paginate: {id:'page1', itemsPerPage: 10, currentPage: reporte}">
+                <td scope="col">{{fila.Nombre}}</td>
+                <td scope="col">{{fila.Codigo}}</td>
+                <td scope="col">{{fila.dia1}}</td>
+                <td scope="col">{{fila.dia2}}</td>
+                <td scope="col">{{fila.dia3}}</td>
+                <td scope="col">{{fila.dia4}}</td>
+                <td scope="col">{{fila.dia5}}</td>
+                <td scope="col">{{fila.dia6}}</td>
+                <td scope="col">{{fila.dia7}}</td>
+                <td scope="col">{{fila.dia8}}</td>
+                <td scope="col">{{fila.dia9}}</td>
+                <td scope="col">{{fila.dia10}}</td>
+                <td scope="col">{{fila.dia11}}</td>
+                <td scope="col">{{fila.dia12}}</td>
+                <td scope="col">{{fila.dia13}}</td>
+                <td scope="col">{{fila.dia14}}</td>
+                <td scope="col">{{fila.dia15}}</td>
+                <td scope="col">{{fila.dia16}}</td>
+                <td scope="col">{{fila.dia17}}</td>
+                <td scope="col">{{fila.dia18}}</td>
+                <td scope="col">{{fila.dia19}}</td>
+                <td scope="col">{{fila.dia20}}</td>
+                <td scope="col">{{fila.dia21}}</td>
+                <td scope="col">{{fila.dia22}}</td>
+                <td scope="col">{{fila.dia23}}</td>
+                <td scope="col">{{fila.dia24}}</td>
+                <td scope="col">{{fila.dia25}}</td>
+                <td scope="col">{{fila.dia26}}</td>
+                <td scope="col">{{fila.dia27}}</td>
+                <td scope="col">{{fila.dia28}}</td>
+                <td scope="col">{{fila.dia29}}</td>
+                <td scope="col">{{fila.dia30}}</td>
+                <td scope="col">{{fila.dia31}}</td>
+                <td scope="col" style="background-color: rgb(216, 216, 216);">{{fila.Total}}</td>
+                <td scope="col" style="background-color: rgb(216, 216, 216);">{{fila.Semana1}}</td>
+                <td scope="col" style="background-color: rgb(216, 216, 216);">{{fila.Semana2}}</td>
+                <td scope="col" style="background-color: rgb(216, 216, 216);">{{fila.Semana3}}</td>
+                <td scope="col" style="background-color: rgb(216, 216, 216);">{{fila.Semana4}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <pagination-controls  id="page1" (pageChange)="reporte = $event" class="text-center"></pagination-controls>
+      </mat-tab>
+      <mat-tab label="Reporte por dia" onclick="cambiarPestana()">
+        <div class="card-body">
+          <div class="hed">
+            <div style="width: 250px;">
+              <label for="">Filtrar por nombre:</label>
+              <input type="text" class="form-control" style="width: 250px" placeholder="Buscar.."
+                [(ngModel)]="filtroNombreReporte" name="filtroNombreReporte" />
+            </div>
+            <div style="width: 150px;">
+              <label for="">Filtrar por año:</label>
+              <select class="form-select" [(ngModel)]="yearActual" style="width: 150px;"
+                (change)="reporteMesSelect()">
+                <option value="2022">2022</option>
+                <option value="2023">2023</option>
+                <option value="2024">2024</option>
+              </select>
+            </div>
+            <div style="width: 150px;">
+              <label for="">Filtrar por mes:</label>
+              <select class="form-select" [(ngModel)]="mesActual" style="width: 150px;" (change)="reporteMesSelect()">
+                <option [value]="i" *ngFor="let item of fecha; let i = index">{{item}}</option>
+              </select>
+            </div>
+            <div style="width: 220px;">
+              <label for="">Reporte:</label><br>
+                <button class="btn btn-success" type="button" (click)="exportToExcel()">
+                  Exportar
+                </button>
+            </div>
+          </div>
+        </div>
+          <div class="card-body">
+            <table class="table mb-2">
+              <thead>
+                <tr style="background-color: rgb(216, 216, 216);">
+                  <th scope="col">ID</th>
+                  <th scope="col">NOMBRE</th>
+                  <th scope="col">FECHA</th>
+                  <th scope="col">INGRESO 1</th>
+                  <th scope="col">SALIDA 1</th>
+                  <th scope="col">TIEMPO 1</th>
+                  <th scope="col">INGRESO 2</th>
+                  <th scope="col">SALIDA 2</th>
+                  <th scope="col">TIEMPO 2</th>
+                  <th scope="col">TOTAL</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                    *ngFor="let fila of reporteDiario| filter:filtroNombreReporte:['Nombre']|paginate: { id:'page2',itemsPerPage: 10, currentPage: pd}">
+                    <td scope="col">{{fila.ID}}</td>
+                    <td scope="col">{{fila.Nombre}}</td>
+                    <td scope="col">{{fila.fecha}}</td>
+                    <td scope="col">{{fila.ingreso1}}</td>
+                    <td scope="col">{{fila.salida1}}</td>
+                    <td scope="col">{{fila.tiempo1}}</td>
+                    <td scope="col">{{fila.ingreso2}}</td>
+                    <td scope="col">{{fila.salida2}}</td>
+                    <td scope="col">{{fila.tiempo2}}</td>
+                    <td scope="col" style="background-color: rgb(216, 216, 216);">{{fila.total}}</td>
+                </tr>
+              </tbody>
+            </table>
+            <pagination-controls id="page2" (pageChange)="pd = $event" class="text-center mt-2"></pagination-controls>
+          </div>
+      </mat-tab>
+    </mat-tab-group>
+
+  </div>
+</section>

@@ -1,0 +1,65 @@
+<div class="login login-page">
+  <div class="login-box">
+      <div class="login-logo">
+        <a><b>Asistencia</b>JK</a>
+      </div>
+      <!-- /.login-logo -->
+      <div class="card">
+        <div class="card-body login-card-body">
+          <p class="login-box-msg">Inicia sesión</p>
+
+          <form  (ngSubmit)="login(f)" #f="ngForm">
+            <span class="text-danger animated fadeIn" *ngIf="f.submitted&&f.controls['empresa'].errors">Este campo es obligatiorio</span>
+            <div class="input-group mb-3">
+              <input type="text" class="form-control" placeholder="Empresa" [(ngModel)]="usuario.empresa" name="empresa">
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-building"></span>
+                </div>
+              </div>
+            </div>
+            <div class="input-group mb-3">
+              <input type="text" [(ngModel)]="usuario.nombreUsuario" name="nombreUsuario"
+              class="form-control" placeholder="Nombre de Usuario" required>
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-user"></span>
+                </div>
+              </div>
+            </div>
+            <span class="text-danger animated fadeIn" *ngIf="f.submitted&&f.controls['contrasena'].errors">Este campo debe contener almenos 4 letras</span>
+            <div class="input-group mb-3">
+              <input type="password" [(ngModel)]="usuario.contrasena" name="contrasena"
+              class="form-control"  placeholder="Contraseña" minlength="4" required>
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-lock"></span>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-8">
+                <div class="icheck-primary">
+                  <input [(ngModel)]="recordarme"
+                  type="checkbox" name="remember" id="remember">
+                  <label for="remember">
+                    Recuérdarme
+                  </label>
+                </div>
+              </div>
+              <!-- /.col -->
+              <div class="col-4">
+                <button type="submit"  class="btn btn-primary btn-block" >
+                  <ng-container *ngIf="!cargando">
+                    Ingresar
+                  </ng-container>
+                </button>
+              </div>
+              <!-- /.col -->
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+</div>
