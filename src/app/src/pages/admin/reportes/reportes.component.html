@@ -29,7 +29,7 @@
             </div>
             <div style="width: 220px;">
               <label for="">Reporte:</label><br>
-                <button class="btn btn-success" type="button" (click)="reporteMes()">
+                <button class="btn btn-success" type="button" (click)="exportToExcel()">
                   Exportar
                 </button>
            <!--      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -155,7 +155,7 @@
             </div>
             <div style="width: 220px;">
               <label for="">Reporte:</label><br>
-                <button class="btn btn-success" type="button" (click)="exportToExcel()">
+                <button class="btn btn-success" type="button" (click)="reporteMes()">
                   Exportar
                 </button>
             </div>
@@ -194,6 +194,72 @@
               </tbody>
             </table>
             <pagination-controls id="page2" (pageChange)="pd = $event" class="text-center mt-2"></pagination-controls>
+          </div>
+      </mat-tab>
+       <mat-tab label="Reporte Total" onclick="cambiarPestana()">
+        <div class="card-body">
+          <div class="hed">
+            <div style="width: 250px;">
+              <label for="">Filtrar por nombre:</label>
+              <input type="text" class="form-control" style="width: 250px" placeholder="Buscar.."
+                [(ngModel)]="filtroNombreTotal" name="filtroNombreTotal" />
+            </div>
+            <div style="width: 150px;">
+              <label for="">Filtrar por año:</label>
+              <select class="form-select" [(ngModel)]="yearActual" style="width: 150px;"
+                (change)="reporteMesSelect()">
+                <option value="2022">2022</option>
+                <option value="2023">2023</option>
+                <option value="2024">2024</option>
+              </select>
+            </div>
+            <div style="width: 150px;">
+              <label for="">Filtrar por mes:</label>
+              <select class="form-select" [(ngModel)]="mesActual" style="width: 150px;" (change)="reporteMesSelect()">
+                <option [value]="i" *ngFor="let item of fecha; let i = index">{{item}}</option>
+              </select>
+            </div>
+            <div style="width: 220px;">
+              <label for="">Reporte:</label><br>
+                <button class="btn btn-success" type="button" (click)="exportToExcelTotal()">
+                  Exportar
+                </button>
+           <!--      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" (click)="reporteMes()">Reporte Por dia</a>
+                  <a class="dropdown-item" (click)="exportToExcel()">Consolidado Diario</a>
+                </div> -->
+            </div>
+          </div>
+        </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table *ngIf="reporteMesActual!=null" id="asistencia-excel" class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">FECHA</th>
+                    <th scope="col">NOMBRE</th>
+                    <th scope="col">TIPO</th>
+                    <th scope="col">IDENTIFICADOR</th>
+                    <th scope="col">IP</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    *ngFor="let fila of reporteTotal| filter:filtroNombreTotal:['nombre']| sort: 'fecha'| paginate: {id:'page3', itemsPerPage: 10, currentPage: pd3 }">
+                    <td>{{fila.id}}</td>
+                    <!-- |date:'short' -->
+                    <td>{{fila.fecha| date: 'd/M/yy, h:mm a'}}</td>
+                    <td>{{fila.nombre}}</td>
+                    <td>{{fila.tipo}}</td>
+                    <td *ngIf="fila.identificador=='SALIDA'"><span class="badge badge-pill badge-danger">{{fila.identificador}}</span></td>
+                    <td *ngIf="fila.identificador=='ENTRADA'"><span class="badge badge-pill badge-success">{{fila.identificador}}</span></td>
+                    <td>{{fila.ip_public}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <pagination-controls id="page3" (pageChange)="pd3 = $event" class="text-center mt-2"></pagination-controls>
           </div>
       </mat-tab>
     </mat-tab-group>

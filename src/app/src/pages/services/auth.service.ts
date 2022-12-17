@@ -9,8 +9,8 @@ import { HttpClient} from '@angular/common/http';
 })
 
 export class AuthService {
-   localhost='https://jk-smart.com:82/';
-   //localhost='https://localhost:7195/';
+   //localhost='https://jk-smart.com:82/';
+   localhost='https://localhost:7195/';
 
   loginUrl = this.localhost+'api/Usuario/login';
   AsistenciaUrl = this.localhost+'api/Asistencia';
@@ -22,9 +22,12 @@ export class AuthService {
   login(form: object) {
     return this.http.post(this.loginUrl, form);
   }
+
   entrada(tipo: string, cod_empleado: Number, identificador: string, uri: any,ip_public:string) {
     var token=localStorage.getItem('token');
-    return this.http.post(this.AsistenciaUrl+'?token='+token, this.marcar(tipo, cod_empleado, identificador, uri,ip_public));
+    return this.http.post(this.AsistenciaUrl, this.marcar(tipo, cod_empleado, identificador, uri,ip_public),{
+      headers: {'token':token}
+    });
   }
 
   marcar(tipo: string, cod_empleado: Number, identificador: string, uri: any,ip_public:string) {
@@ -45,11 +48,15 @@ export class AuthService {
 
   obtenerAsistencia() {
     var token=localStorage.getItem('token');
-    return this.http.get(this.AsistenciaUrl+"?token="+token);
+    return this.http.get(this.AsistenciaUrl,{
+      headers: {'token':token}
+    });
   }
   getEmpleado(codigo:string){
     var token=localStorage.getItem('token');
-    return this.http.get(this.empleadoUrl+'?codigo='+codigo+'&token='+token);
+    return this.http.get(this.empleadoUrl+'?codigo='+codigo,{
+      headers: {'token':token}
+    });
   }
   parseData(data: string | ArrayBuffer | null){
     var dummyArr: string[][] = []
@@ -80,29 +87,41 @@ estaAutenticado():boolean{
 }
 getListaEmpleados(){
  var token=localStorage.getItem('token');
- return this.http.get(this.localhost+'api/Empleado?token='+token);
+ return this.http.get(this.localhost+'api/Empleado',{
+  headers: {'token':token}
+    });
 }
 updateEmpleado(form:EmpleadoModel){
   var token=localStorage.getItem('token');
-  return this.http.post(this.localhost+'api/Empleado/update?token='+token,form);
+  return this.http.post(this.localhost+'api/Empleado/update',form,{
+    headers: {'token':token}
+    });
 }
 insertEmpleado(form:EmpleadoModel){
   var token=localStorage.getItem('token');
-  return this.http.post(this.localhost+'api/Empleado/insert?token='+token,form);
+  return this.http.post(this.localhost+'api/Empleado/insert',form,{
+    headers: {'token':token}
+    });
 }
 getLocales(){
   var token=localStorage.getItem('token');
-  return this.http.get(this.localhost+'local?token='+token);
+  return this.http.get(this.localhost+'local',{
+    headers: {'token':token}
+    });
 }
 updateAsistencia(form:any){
   form.tipo='MANUAL';
   var token=localStorage.getItem('token');
-  return this.http.post(this.localhost+'api/Asistencia/update?token='+token,form);
+  return this.http.post(this.localhost+'api/Asistencia/update',form,{
+    headers: {'token':token}
+    });
 }
 crearAsistencia(form:any){
   var token=localStorage.getItem('token');
   form.tipo='MANUAL';
-  return this.http.post(this.localhost+'api/Asistencia/insert?token='+token,form);
+  return this.http.post(this.localhost+'api/Asistencia/insert',form,{
+    headers: {'token':token}
+    });
 }
 buscarIp(){
   return this.http.get('https://api.ipify.org/?format=json');
@@ -119,16 +138,22 @@ cargando(){
 
 getAsistenciaPorMes(mes:any,año:any){
 var token=localStorage.getItem('token');
-return this.http.get(this.localhost+'api/Asistencia/mes?token='+token+'&mes='+mes+'&year='+año);
+return this.http.get(this.localhost+'api/Asistencia/mes?mes='+mes+'&year='+año,{
+  headers: {'token':token}
+    });
 }
 
 getAsistenciaEmpleado(desde:string,hasta:string,empleado:string){
   var token=localStorage.getItem('token');
-  return this.http.get(this.localhost+"api/Asistencia/empleado?token="+token+"&desde="+desde+"&hasta="+hasta+"&empleado="+empleado);
+  return this.http.get(this.localhost+"api/Asistencia/empleado?desde="+desde+"&hasta="+hasta+"&empleado="+empleado,{
+    headers: {'token':token}
+    });
 }
 rangoAsistencia(desde:string,hasta:string){
   var token=localStorage.getItem('token');
-  return this.http.get(this.localhost+"api/Asistencia/rangoAsistencia?token="+token+"&desde="+desde+"&hasta="+hasta);
+  return this.http.get(this.localhost+"api/Asistencia/rangoAsistencia?desde="+desde+"&hasta="+hasta,{
+    headers: {'token':token}
+    });
 }
 
 }
